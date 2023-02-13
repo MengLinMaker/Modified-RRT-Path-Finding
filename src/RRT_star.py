@@ -1,4 +1,4 @@
-from coordinateTree import CoordinateTree
+from treeStructure.coordinateTree import CoordinateTree
 import random as rnd
 import math
 import sys
@@ -831,8 +831,8 @@ class RRT_star(CoordinateTree):
 ##################################################
 
 def main():
-    from obstacles import Obstacles
-    from map import Map
+    from pygameStructure.obstacles import Obstacles
+    from pygameStructure.map import Map
     import time as TIME
     import numpy as np
 

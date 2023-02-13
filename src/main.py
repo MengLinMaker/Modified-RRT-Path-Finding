@@ -1,8 +1,8 @@
 import pygame
 from RRT import RRT
 from RRT_star import RRT_star
-from map import Map
-from obstacles import Obstacles
+from pygameStructure.map import Map
+from pygameStructure.obstacles import Obstacles
 import random as rnd
 
 import numpy as np

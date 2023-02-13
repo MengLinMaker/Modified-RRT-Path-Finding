@@ -1,4 +1,4 @@
-from basicCoordinateTree import BasicCoordinateTree
+from treeStructure.basicCoordinateTree import BasicCoordinateTree
 import random as rnd
 import math
 import pygame
@@ -832,8 +832,8 @@ class RRT(BasicCoordinateTree):
 
 def main():
     import pygame
-    from obstacles import Obstacles
-    from map import Map
+    from pygameStructure.obstacles import Obstacles
+    from pygameStructure.map import Map
     import time as TIME
     import numpy as np
 
