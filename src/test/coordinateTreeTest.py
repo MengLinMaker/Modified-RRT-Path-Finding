@@ -29,7 +29,8 @@ class CoordinateTree:
         if nodeID == None:
             nodeID = self.numNodes-1
         for i in range(self.numNodes):
-            if self.parentIDs[i] > nodeID and self.parentIDs[i] != None: self.parentIDs[i] -= 1
+            if self.parentIDs[i] != None and self.parentIDs[i] > nodeID:
+                self.parentIDs[i] -= 1
             for j in range(len(self.childIDs[i])):
                 if self.childIDs[i][j] > nodeID: self.childIDs[i][j] -= 1
         self.removeEdge(nodeID)

@@ -1,8 +1,7 @@
-from BasicCoordinateTree import BasicCoordinateTree
+from basicCoordinateTree import BasicCoordinateTree
 import random as rnd
 import math
 import pygame
-import time
 
 # RRT is a subclass of CoordinateTree
 class RRT(BasicCoordinateTree):
@@ -568,6 +567,8 @@ class RRT(BasicCoordinateTree):
         return interpCoor
 
     def addBacktrackingPoints(self, path):
+        if path == None:
+            return None
         length = len(path)
         forwardTracking = self.distInterp(path[0], path[1], - self.pushObjectSize)
         newPath = [forwardTracking]
@@ -699,6 +700,8 @@ class RRT(BasicCoordinateTree):
 
     def solvePushObject(self, start, objectCoor, goal, backtrackSteps=5, rep=2000, map=None, drawAll=False):
         pushPath, direction, minPathDist, circleCoor = self.solveWithBacktrack(objectCoor, goal, backtrackSteps, rep)
+        if pushPath == None:
+            return None, None, None
         pushObs = pygame.Rect([circleCoor[0][0] - 0.5*self.backtrackSteps*self.maxStep, circleCoor[0][1] - 0.5*self.backtrackSteps*self.maxStep],
                               (1*self.backtrackSteps*self.maxStep, 1*self.backtrackSteps*self.maxStep))
         self.obsList.append(pushObs)
@@ -732,7 +735,7 @@ class RRT(BasicCoordinateTree):
         solutionPath = None
         direction = None
         circleCoor = None
-        while solutionPath == None or iter < rep:
+        while iter < rep:
             iter += 1
             if iter % 100 == 1:
                 childCoor, parentCoor = self.bias(self.goal)
@@ -759,6 +762,8 @@ class RRT(BasicCoordinateTree):
                 map.drawCircle(map.grey, childCoor, 2, 0)
                 map.drawLine(map.blue, childCoor, parentCoor, 1)
 
+        if solutionPath == None:
+            return None, None, None, None
         solutionPath, direction = self.addBacktrackingPoints(solutionPath)
         minPathDist = self.calcPathDist(solutionPath)
         if not map == None:
@@ -827,8 +832,8 @@ class RRT(BasicCoordinateTree):
 
 def main():
     import pygame
-    from Obstacles import Obstacles
-    from Map import Map
+    from obstacles import Obstacles
+    from map import Map
     import time as TIME
     import numpy as np
 
@@ -836,7 +841,7 @@ def main():
     start = [50,50]
     goal = [mapDim[0]-50, mapDim[1]-50]
     obsDim = 80
-    obsNum = 10
+    obsNum = 20
 
     obsGenerator = Obstacles()
     rrt = RRT(mapDim)
@@ -861,8 +866,8 @@ def main():
             begin = TIME.time()
             rep = 1000 + 1000 * j
             rrt.setSolveParam(20, 5, 20, 500)
-            #solutionPath, dist[j][i] = rrt.solve(start, goal, rep, map, True)
-            solutionPath, direction, dist[j][i] = rrt.solveWithBacktrack(start, goal, 3, rep)#, map, True)
+            solutionPath, dist[j][i] = rrt.solve(start, goal, rep, map, True)
+            #solutionPath, direction, dist[j][i] = rrt.solveWithBacktrack(start, goal, 3, rep)#, map, True)
             end = TIME.time()
             time[j][i] = end - begin
 
@@ -870,6 +875,10 @@ def main():
             print("distance {}: {}".format(j, dist[j][i]))
             aveDist[j] += dist[j][i]
             aveTime[j] += time[j][i]
+            
+            map.drawMap()
+            map.drawPath(solutionPath)
+            TIME.sleep(1)
 
     print("\n\n\nOVERALL COMPARISONS: ")
 

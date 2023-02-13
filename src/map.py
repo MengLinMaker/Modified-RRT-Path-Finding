@@ -53,6 +53,8 @@ class Map:
 
     def drawPath(self, nodeCoor, colour = [0,0,0]):
         oldCoor = None
+        if nodeCoor == None:
+            return
         for coor in nodeCoor:
             self.drawCircle(colour, coor, 3, 0)
             if oldCoor != None:

@@ -1,8 +1,8 @@
 import pygame
 from RRT import RRT
 from RRT_star import RRT_star
-from Map import Map
-from Obstacles import Obstacles
+from map import Map
+from obstacles import Obstacles
 import random as rnd
 
 import numpy as np
@@ -44,8 +44,8 @@ def main():
     start = [450,600]
     goal = [mapDim[0]-50, mapDim[1]-50]
     #goal = [360, 180]
-    obsDim = 50
-    obsNum = 50
+    obsDim = 100
+    obsNum = 30
 
 
     obsGenerator = Obstacles()
@@ -55,7 +55,7 @@ def main():
 
 
     #'''
-    fname = 'TRUEMAP.txt'
+    fname = './src/TRUEMAP.txt'
     apple_gt, lemon_gt, person_gt, aruco_gt = parse_map(fname)
     mapObstacles = []
     minCoor = [-1.5, -1.5]
@@ -96,7 +96,7 @@ def main():
 
 
 
-    #'''
+    '''
     dist = 0
     collision = True
     while dist < 580 or collision:
@@ -133,7 +133,7 @@ def main():
     rrt.setSolveParam(0.1, 5, 30, 500)
     # 5000 iterations should be good enough fro solving
     solutionPath, distance = rrt.solve(start, goal, 5000)
-    '''
+    #'''
 
 
 
@@ -180,16 +180,22 @@ def main():
 
         begin = time.time()
         #'''
-        rep = 3000
+        rep = 2000
         rrt.setSolveParam(20, 1, 30, 100)
         RRTsol, RRTdist[i] = rrt.solve(start, goal, rep, map, True)
         RRTsol = rrt.resamplePath(RRTsol, RRTdist[i])
         print(RRTsol)
+        #'''
+
+        map.drawCircle(map.green, start, 5, 0)
+        map.drawCircle(map.red, goal, 5, 0)
+
+        '''
         rep = 1000
         rrt.setSolveParam(20, 5, 20, 500)
         rrt.setPushObsSize(20)
         #RRTsol, forward, RRTdist[i], circleCoor = rrt.solveWithBacktrack(objCoor, goal, 3, rep, map, True)
-        #RRTsol, forward, RRTdist[i] = rrt.solvePushObject(start, objCoor, goal, 2, rep, map, True)
+        RRTsol, forward, RRTdist[i] = rrt.solvePushObject(start, objCoor, goal, 2, rep, map, True)
         rep = 500
 
         #RRTsol, RRTdist[i] = rrt.solveWithBacktrack2(start, goal, 3, rep, map, True)
@@ -215,14 +221,15 @@ def main():
         map.drawPath(RRTsol, map.blue)
         #map.drawPath(SRRTsol, map.red)
         #map.drawPath(bestPath, map.green)
-        time.sleep(5)
+        time.sleep(1)
         print("\nRRT execution time: {}".format(RRTtime[i]))
         print("RRT min distance: {}".format(RRTdist[i]))
         print("Special_RRT execution time: {}".format(SRRTtime[i]))
         print("Special_RRT min distance: {}".format(SRRTdist[i]))
 
         print("Best distance: {}".format(bestDist[i]))
-        aveRRTdist += RRTdist[i]
+        if RRTdist[i] != None:
+            aveRRTdist += RRTdist[i]
         aveSRRTdist += SRRTdist[i]
         aveRRTtime += RRTtime[i]
         aveSRRTtime += SRRTtime[i]

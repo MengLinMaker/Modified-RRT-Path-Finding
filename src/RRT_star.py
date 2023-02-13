@@ -1,4 +1,4 @@
-from CoordinateTree import CoordinateTree
+from coordinateTree import CoordinateTree
 import random as rnd
 import math
 import sys
@@ -831,17 +831,16 @@ class RRT_star(CoordinateTree):
 ##################################################
 
 def main():
-    import pygame
-    from Obstacles import Obstacles
-    from Map import Map
+    from obstacles import Obstacles
+    from map import Map
     import time as TIME
     import numpy as np
 
     mapDim = [600, 600]
     start = [50,50]
     goal = [mapDim[0]-50, mapDim[1]-50]
-    obsDim = 40
-    obsNum = 30
+    obsDim = 80
+    obsNum = 20
 
     obsGenerator = Obstacles()
     rrt = RRT_star(mapDim)
@@ -874,6 +873,10 @@ def main():
             print("distance {}: {}".format(j, dist[j][i]))
             aveDist[j] += dist[j][i]
             aveTime[j] += time[j][i]
+
+            map.drawMap()
+            map.drawPath(solutionPath)
+            TIME.sleep(1)
 
     print("\n\n\nOVERALL COMPARISONS: ")
     for j in range(rounds):
